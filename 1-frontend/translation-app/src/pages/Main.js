@@ -60,7 +60,7 @@ const Main = () => {
     <>
       <div className="content">
         <div>
-          <h1>UNIFi</h1>
+          <h1 className="app-title">UNIFi</h1>
           <h3>Translate..</h3>
           <form onSubmit={handleInputChange}>
             <input type="text" value={inputText} onChange={handleInput} />
@@ -81,7 +81,7 @@ const Main = () => {
 
             <button type="submit">Translate</button>
             {/* translated text below vvvv */}
-            <p>{translatedText}</p>
+            <h3 className="translated-text">{translatedText}</h3>
           </form>
         </div>
       </div>

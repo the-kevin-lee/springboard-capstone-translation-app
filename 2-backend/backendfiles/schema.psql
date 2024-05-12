@@ -1,0 +1,19 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    password_hashed VARCHAR(120) NOT NULL
+)
+
+CREATE TABLE translations (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    input_text TEXT NOT NULL,
+    translated_text TEXT NOT NULL,
+    input_language VARCHAR(5) NOT NULL,
+    target_language VARCHAR(5) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
+
+

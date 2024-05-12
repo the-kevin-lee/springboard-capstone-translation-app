@@ -1,5 +1,27 @@
 
+h1 .app-title {
+    font-size: 4em;
+}
+
 .content {
     margin: 0 auto;
     text-align: center;
+}
+
+
+@keyframes fadeInFromLeft {
+    
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+}
+
+.translated-text {
+    animation: fadeInFromLeft 2s ease-out;
 }
