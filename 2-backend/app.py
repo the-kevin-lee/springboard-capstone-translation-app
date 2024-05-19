@@ -1,5 +1,5 @@
 from backendfiles.models import User, Translation
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -70,7 +70,7 @@ def register():
 # user logging in
 @app.route("/login", methods=['POST'])
 def login():
-    data = request.get_json
+    data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
     if user and check_password_hash(user.password.hashed, data['password']):
         return jsonify({'message': 'Login success!'}), 200
@@ -109,7 +109,13 @@ def get_translations(user_id):
         'timestamp': t.timestamp
     } for t in translations]), 200
 
-
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path')
+def serve(path):
+    if path != "" and os.path.exists("1-frontend/build" + path):
+        return send_from_directory('1-frontend/build', path)
+    else:
+        return send_from_directory('1-frontend/build', 'index.html')
 
 
 
