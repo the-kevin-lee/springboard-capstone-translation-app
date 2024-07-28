@@ -12,6 +12,11 @@ npm run build
 # Navigate back to the root directory
 cd ../../2-backend || exit
 
+# Check if the virtual environment directory exists, create if it doesn't
+if [ ! -d "venv" ]; then
+  python3 -m venv venv
+fi
+
 # Activate virtual environment
 source venv/bin/activate
 
