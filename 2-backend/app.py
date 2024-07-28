@@ -8,35 +8,23 @@ import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 
-load_dotenv(dotenv_path='/env')
-
+load_dotenv(dotenv_path='.env')
 
 auth_key = os.getenv("DEEPL_AUTH_KEY")
-
-# print(os.getenv("DEEPL_AUTH_KEY"))
 translator = deepl.Translator(auth_key)
 
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
 migrate = Migrate(app, db)
-
-CORS(app, methods=['GET', 'POST'], origins=[
-     "http://localhost:3000"], allow_headers=['Content-Type'])
-# translator = Translator()
-
+CORS(app, methods=['GET', 'POST'], origins=["http://localhost:3000"], allow_headers=['Content-Type'])
 
 @app.route("/")
 def test():
     return jsonify({"message": "Hello World"})
 
-
-# translating
 @app.route("/translate", methods=['POST'])
 def translate():
     input_text = request.json.get("inputText")
@@ -45,42 +33,29 @@ def translate():
     if not input_text or not target_language:
         return jsonify({"error": "Missing input or target language"}), 400
 
-    # send request logic
-
     try:
-        result = translator.translate_text(
-            input_text, target_lang=target_language)
+        result = translator.translate_text(input_text, target_lang=target_language)
         return jsonify({"translation": result.text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-# user registering
 @app.route("/register", methods=['POST'])
 def register():
     data = request.get_json()
     hashed_password = generate_password_hash(data['password'], method='sha256')
-    new_user = User(
-        username=data['username'], email=data['email'], password_hashed=hashed_password)
+    new_user = User(username=data['username'], email=data['email'], password_hashed=hashed_password)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'Your account has been created!'}), 201
 
-
-# user logging in
 @app.route("/login", methods=['POST'])
 def login():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
-    if user and check_password_hash(user.password.hashed, data['password']):
+    if user and check_password_hash(user.password_hashed, data['password']):
         return jsonify({'message': 'Login success!'}), 200
-    return jsonify({
-        'message':
-        'Invalid credentials'
-    }), 400
+    return jsonify({'message': 'Invalid credentials'}), 400
 
-
-# adding translation
 @app.route("/translations", methods=['POST'])
 def add_translation():
     data = request.get_json()
@@ -95,9 +70,7 @@ def add_translation():
     db.session.commit()
     return jsonify({'message': 'Remembered Translation!'}), 201
 
-
-#get translations by user
-@app.route("/translations/<int:user_id>", methods=['POST'])
+@app.route("/translations/<int:user_id>", methods=['GET'])
 def get_translations(user_id):
     translations = Translation.query.filter_by(user_id=user_id).all()
     return jsonify([{
@@ -110,14 +83,12 @@ def get_translations(user_id):
     } for t in translations]), 200
 
 @app.route('/', defaults={'path': ''})
-@app.route('/<path:path')
+@app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists("1-frontend/build" + path):
+    if path != "" and os.path.exists("1-frontend/build/" + path):
         return send_from_directory('1-frontend/build', path)
     else:
         return send_from_directory('1-frontend/build', 'index.html')
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)

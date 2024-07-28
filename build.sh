@@ -23,5 +23,8 @@ source venv/bin/activate
 # Install backend dependencies
 pip install -r requirements.txt
 
+# Set PYTHONPATH to ensure correct module imports
+export PYTHONPATH=$(pwd)
+
 # Run database migrations if any (for example using Flask-Migrate)
 flask db upgrade
