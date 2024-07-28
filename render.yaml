@@ -1,16 +1,11 @@
 services:
- - type: web
-   runtime: python
-   name: translation-app
-   env: python
-   buildCommand: "./build.sh"
-   startCommand: "gunicorn 2-backend.app:app"
-   envVars:
+  - type: web
+    name: translation-app
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "flask run --host=0.0.0.0"
+    envVars:
+      - key: FLASK_APP
+        value: "app.py"
       - key: FLASK_ENV
-        value: production
-      - key: SQLALCHEMY_DATABASE_URI
-        value: postgresql://postgres@localhost/translation_app_db
-      - key: DEEPL_AUTH_KEY
-        value: 11ff719d-d499-4d80-a59a-dce5e3c814a3:fx
-      - key: REACT_APP_API_URL
-        value: https://translation-app.onrender.com
+        value: "production"
