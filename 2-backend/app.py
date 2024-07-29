@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 import deepl
-import os
 from dotenv import load_dotenv
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv(dotenv_path='.env')  # Adjust path if necessary
