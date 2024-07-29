@@ -1,4 +1,3 @@
-from backendfiles.models import User, Translation
 from flask import Flask, jsonify, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,7 +7,7 @@ import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 
-load_dotenv(dotenv_path='.env')
+load_dotenv(dotenv_path='.env')  # Adjust path if necessary
 
 auth_key = os.getenv("DEEPL_AUTH_KEY")
 translator = deepl.Translator(auth_key)
@@ -20,6 +19,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 CORS(app, methods=['GET', 'POST'], origins=["http://localhost:3000"], allow_headers=['Content-Type'])
+
+# Import models after initializing db
+from backendfiles.models import User, Translation
 
 @app.route("/")
 def test():
