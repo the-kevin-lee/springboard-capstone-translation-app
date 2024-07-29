@@ -20,9 +20,10 @@ def get_engine_url():
     try:
         return get_engine().url.render_as_string(hide_password=False).replace('%', '%%')
     except AttributeError:
-        return str(get_engine().url).replace('%', '%%')
+        # Use SQLALCHEMY_DATABASE_URI instead of DATABASE_URL
+        return os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///default.db').replace('%', '%%')
 
-config.set_main_option('sqlalchemy.url', os.getenv('DATABASE_URL', 'sqlite:///default.db'))
+config.set_main_option('sqlalchemy.url', get_engine_url())
 target_db = current_app.extensions['migrate'].db
 
 def get_metadata():
