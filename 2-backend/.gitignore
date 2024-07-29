@@ -43,4 +43,3 @@ credentials/
 __pycache__/
 venv/
 
-migrations/
