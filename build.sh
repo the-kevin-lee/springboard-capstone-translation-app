@@ -1,33 +1,30 @@
 #!/bin/bash
 
-# Navigate to frontend directory
-cd 1-frontend/translation-app || exit
-
-# Install frontend dependencies
-npm install
-
-# Build the frontend
-npm run build
-
-# Navigate back to the root directory
-cd ../../2-backend || exit
-
-# Check if the virtual environment directory exists, create if it doesn't
-if [ ! -d "venv" ]; then
-  python3 -m venv venv
-fi
+# Navigate to the backend directory
+cd 2-backend
 
 # Activate virtual environment
 source venv/bin/activate
 
-# Install backend dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# Set PYTHONPATH to ensure correct module imports
+# Set PYTHONPATH
 export PYTHONPATH=$(pwd)
 
-# Run database migrations if any (for example using Flask-Migrate)
+# Ensure migrations directory exists
+if [ ! -d "migrations" ]; then
+    flask db init
+fi
+
+# Run database migrations
 flask db upgrade
 
+# Navigate to the frontend directory
+cd ../1-frontend
 
+# Install frontend dependencies
+npm install
 
+# Build frontend assets
+npm run build
