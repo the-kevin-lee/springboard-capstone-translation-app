@@ -23,7 +23,7 @@ const Main = () => {
     }
 
 
-    const response = await fetch('http://localhost:5000/translate', {
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/translate` || `http://localhost:5000/translate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
