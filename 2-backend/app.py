@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-CORS(app, methods=['GET', 'POST'], origins=[os.environ.get('FRONTEND_URL') or 'http://localhost:3000'], allow_headers=['Content-Type'])
+CORS(app, methods=['GET', 'POST'], origins=[os.environ.get('FRONTEND_URL'), 'http://localhost:3000'], allow_headers=['Content-Type'])
 
 # Import models after initializing db
 from backendfiles.models import User, Translation
