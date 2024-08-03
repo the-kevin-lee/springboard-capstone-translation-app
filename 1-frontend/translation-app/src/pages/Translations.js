@@ -6,6 +6,8 @@ const Translations = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const API_SERVER = process.env.REACT_APP_API_SERVER || 'http://localhost:5000';
+
     useEffect(() => {
         const fetchTranslations = async () => {
             const token = localStorage.getItem('token');
@@ -15,7 +17,7 @@ const Translations = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:5000/user/translations', {
+                const response = await fetch(`${API_SERVER}/user/translations`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",
@@ -34,7 +36,7 @@ const Translations = () => {
             }
         };
         fetchTranslations();
-    }, [navigate]);
+    }, [navigate, API_SERVER]);
 
     return (
         <div>

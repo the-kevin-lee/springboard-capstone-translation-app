@@ -9,6 +9,7 @@ const Main = () => {
   const [selectedLang, setSelectedLang] = useState("")
 
 
+  const API_SERVER = process.env.REACT_APP_API_SERVER || 'http://localhost:5000';
 
 
   const handleInputChange = async (event) => {
@@ -23,7 +24,7 @@ const Main = () => {
     }
 
 
-    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/translate` || `http://localhost:5000/translate`, {
+    const response = await fetch(`${API_SERVER}/translate` || `http://localhost:5000/translate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

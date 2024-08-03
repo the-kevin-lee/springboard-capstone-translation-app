@@ -6,13 +6,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const API_SERVER = process.env.REACT_APP_API_SERVER || 'http://localhost:5000';
+
   const handleLogin = async (e) => {
     e.preventDefault();
   
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/login` ||
-          `http://localhost:5000/login`,
+        `${API_SERVER}/login`,
         {
           method: "POST",
           headers: {

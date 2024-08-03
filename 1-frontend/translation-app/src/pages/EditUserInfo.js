@@ -11,6 +11,8 @@ const EditUserInfo = () => {
     const [success, setSuccess] = useState("");
     const navigate = useNavigate();
 
+    const API_SERVER = process.env.REACT_APP_API_SERVER || 'http://localhost:5000'
+
     // fetching current user data
     useEffect(() => {
         const fetchUserData = async () => {
@@ -21,7 +23,7 @@ const EditUserInfo = () => {
             }
 
             try {
-                const response = await fetch(`http://localhost:5000/get-user-info`, {
+                const response = await fetch(`${API_SERVER}/get-user-info`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -43,7 +45,7 @@ const EditUserInfo = () => {
             }
         };
         fetchUserData();
-    }, [navigate])
+    }, [navigate, API_SERVER])
 
 
 
