@@ -1,26 +1,35 @@
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 import deepl
-from dotenv import load_dotenv
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+from config import config
 
-load_dotenv(dotenv_path='.env')  # Adjust path if necessary
+load_dotenv(dotenv_path='.env')  # loading environment variables
 
+env = os.environ.get('FLASK_ENV', 'default')
+app = Flask(__name__)
+app.config.from_object(config[env])
+
+#initialize services
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+CORS(app)
+# CORS(app, methods=['GET', 'POST'], origins=['https://translation-app-frontend-jk98.onrender.com/'], allow_headers=['Content-Type'])
+# os.environ.get('FRONTEND_URL'), 'http://localhost:3000'
+
+
+# initialize translator 
 auth_key = os.getenv("DEEPL_AUTH_KEY")
 translator = deepl.Translator(auth_key)
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-# CORS(app, methods=['GET', 'POST'], origins=['https://translation-app-frontend-jk98.onrender.com/'], allow_headers=['Content-Type'])
-CORS(app)
-# os.environ.get('FRONTEND_URL'), 'http://localhost:3000'
 
 
 from .backendfiles.models import User, Translation
@@ -44,10 +53,12 @@ def translate():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+#REGISTRATION/AUTHENTICATION/LOGOUT
 @app.route("/register", methods=['POST'])
 def register():
     data = request.get_json()
-    hashed_password = generate_password_hash(data['password'], method='sha256')
+    hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
     new_user = User(username=data['username'], email=data['email'], password_hashed=hashed_password)
     db.session.add(new_user)
     db.session.commit()
@@ -58,8 +69,20 @@ def login():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
     if user and check_password_hash(user.password_hashed, data['password']):
+        session['user_id'] = user.id
         return jsonify({'message': 'Login success!'}), 200
     return jsonify({'message': 'Invalid credentials'}), 400
+
+
+@app.route("/logout", methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    return jsonify({'message': 'Logged out!'}), 200
+
+
+
+
+
 
 @app.route("/translations", methods=['POST'])
 def add_translation():

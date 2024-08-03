@@ -1,6 +1,7 @@
 import React from "react";
 import Main from "./pages/Main";
-import Authenticate from "./pages/Authenticate";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Translations from "./pages/Translation";
 
 import {
@@ -26,8 +27,10 @@ function App() {
 
           {/* vvvvvvvv this is the main SPA */}
           <Route path="/" element={<Main />} />
-          <Route path='/authenticate' element = {<Authenticate />} />
+      
           <Route path='/translations' element = {<Translations/>} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route path='*' element = {<Navigate to="/" />} />
          
         </Routes>

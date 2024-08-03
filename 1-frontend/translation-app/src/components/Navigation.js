@@ -4,7 +4,7 @@ import './Navigation.css'
 const Navigation  = () => {
     return (
         <div className="navigation">
-            <a href="/">Authenticate</a>
+            <a href="/register">Register</a>
             <a href="/about">My Translations</a>
         </div>
     )
