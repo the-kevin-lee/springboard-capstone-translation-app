@@ -1,4 +1,5 @@
-import './Navigation.css'
+import './Navigation.css';
+import React from 'react';
 
 
 const Navigation  = () => {

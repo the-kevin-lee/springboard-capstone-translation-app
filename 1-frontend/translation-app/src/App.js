@@ -1,8 +1,11 @@
 import React from "react";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
+import EditUserInfo from "./pages/EditUserInfo";
+import DeleteAccount from "./pages/DeleteAccount";
 import Register from "./pages/Register";
-import Translations from "./pages/Translation";
+import Dashboard from './pages/Dashboard';
+import Translations from "./pages/Translations";
 
 import {
   BrowserRouter as Router,
@@ -28,9 +31,20 @@ function App() {
           {/* vvvvvvvv this is the main SPA */}
           <Route path="/" element={<Main />} />
       
-          <Route path='/translations' element = {<Translations/>} />
+          {/* vvvvvv user related functionality */}
+         
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          
+
+          <Route path='/translations' element = {<Translations/>} />
+          <Route path="/edit-info" element={<EditUserInfo/>} />
+          <Route path="/delete-account" element={<DeleteAccount/>} />
+          
+
+
+
           <Route path='*' element = {<Navigate to="/" />} />
          
         </Routes>

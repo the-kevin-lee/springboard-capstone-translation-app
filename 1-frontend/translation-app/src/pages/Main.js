@@ -1,4 +1,4 @@
-import { useState } from "react";
+import  React,{ useState } from "react";
 import "./Main.css";
 
 import { languages } from "../assets/languages";

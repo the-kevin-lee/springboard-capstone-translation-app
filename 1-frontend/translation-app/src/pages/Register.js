@@ -1,24 +1,37 @@
-import {useState} from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER}/register` || `http://localhost:5000/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({username, email, password}),
-        });
 
-        const data = await response.json();
-        alert(data.message);
+        try {
+            const response = await fetch(`http://localhost:5000/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, email, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert(data.message);
+                navigate('/dashboard'); // redirecting after registration
+            } else {
+                const errorData = await response.json();
+                alert(`Registration failed: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            alert(`Registration failed: ${error.message}`);
+        }
     };
-
 
     return (
         <form onSubmit={handleRegister}>
@@ -43,11 +56,8 @@ const Register = () => {
                 placeholder="Password"
             />
             <button type="submit">Register</button>
-
-
-
         </form>
-    )
+    );
 };
 
 export default Register;
