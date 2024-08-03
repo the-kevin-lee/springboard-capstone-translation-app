@@ -22,6 +22,7 @@ const Register = () => {
             if (response.ok) {
                 const data = await response.json();
                 alert(data.message);
+                localStorage.setItem('token', data.token); // storing token
                 navigate('/dashboard'); // redirecting after registration
             } else {
                 const errorData = await response.json();

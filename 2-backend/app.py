@@ -74,6 +74,13 @@ def register():
     new_user = User(username=data['username'], email=data['email'], password_hashed=hashed_password)
     db.session.add(new_user)
     db.session.commit()
+
+    #new user token
+    token = jwt.encode({
+        'user_id': new_user.id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+    }, app.config['SECRET_KEY'], algorithm="HS256")
+
     return jsonify({'message': 'Your account has been created!'}), 201
 
 @app.route("/login", methods=['POST'])
@@ -109,7 +116,16 @@ def get_user_translations(current_user):
         'timestamp': t.timestamp
     } for t in translations]), 200
 
-@app.route('/user/edit-info', methods=['POST'])
+
+@app.route('/get-user-info', methods=['GET'])
+@token_required
+def get_user_info(current_user):
+    return jsonify({
+        'username': current_user.username,
+        'email': current_user.email
+    }), 200
+
+@app.route('/edit-info', methods=['POST'])
 @token_required
 def edit_user_info(current_user):
     data = request.get_json()
@@ -120,7 +136,7 @@ def edit_user_info(current_user):
     db.session.commit()
     return jsonify({'message': 'User info updated'}), 200
 
-@app.route('/user/delete-account', methods=['DELETE'])
+@app.route('/delete-account', methods=['DELETE'])
 @token_required
 def delete_account(current_user):
     db.session.delete(current_user)
