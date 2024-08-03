@@ -3,14 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 import deepl
+from dotenv import load_dotenv
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
-from config import config
+
+from .app_config import config
 
 load_dotenv(dotenv_path='.env')  # loading environment variables
 
-env = os.environ.get('FLASK_ENV', 'default')
+env = os.environ.get('FLASK_ENV', 'development')
 app = Flask(__name__)
 app.config.from_object(config[env])
 
