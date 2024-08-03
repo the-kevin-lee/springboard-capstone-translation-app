@@ -22,12 +22,13 @@ migrate = Migrate(app, db)
 CORS(app)
 # os.environ.get('FRONTEND_URL'), 'http://localhost:3000'
 
-# Import models after initializing db
-from backendfiles.models import User, Translation
 
+from .backendfiles.models import User, Translation
+
+# test route for server 
 @app.route("/")
 def test():
-    return jsonify({"message": "Hello World"})
+    return jsonify({"message": "Backend is working!"})
 
 @app.route("/translate", methods=['POST'])
 def translate():
