@@ -11,7 +11,7 @@ import datetime
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .app_config import config
+from app_config import config
 
 load_dotenv(dotenv_path='.env')  # loading environment variables
 
