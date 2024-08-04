@@ -28,7 +28,7 @@ CORS(app)
 auth_key = os.getenv("DEEPL_AUTH_KEY")
 translator = deepl.Translator(auth_key)
 
-from .backendfiles.models import User, Translation
+from backendfiles.models import User, Translation
 
 # Test route for server 
 @app.route("/")
