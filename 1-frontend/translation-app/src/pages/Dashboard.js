@@ -28,7 +28,7 @@ const Dashboard = () => {
   return (
     <div>
       <h1>Welcome to your Dashboard</h1>
-      <button onClick={handleViewTranslations}>View Your Translatiosn</button>
+      <button onClick={handleViewTranslations}>View Your Translations</button>
       <button onClick={handleEditUserInfo}>Edit Your Info</button>
       <button onClick={handleDeleteAccount}>Delete Your Account</button>
     </div>

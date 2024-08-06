@@ -11,7 +11,7 @@ import datetime
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app_config import config
+from .app_config import config
 
 load_dotenv(dotenv_path='.env')  # loading environment variables
 
@@ -28,7 +28,7 @@ CORS(app)
 auth_key = os.getenv("DEEPL_AUTH_KEY")
 translator = deepl.Translator(auth_key)
 
-from backendfiles.models import User, Translation
+from .backendfiles.models import User, Translation
 
 # Test route for server 
 @app.route("/")
@@ -78,7 +78,7 @@ def register():
     #new user token
     token = jwt.encode({
         'user_id': new_user.id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
     return jsonify({'message': 'Your account has been created!'}), 201
@@ -92,7 +92,7 @@ def login():
     
     token = jwt.encode({
         'user_id': user.id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
     return jsonify({'token': token})

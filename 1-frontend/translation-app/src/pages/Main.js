@@ -1,4 +1,4 @@
-import  React,{ useState } from "react";
+import React, { useState } from "react";
 import "./Main.css";
 
 import { languages } from "../assets/languages";
@@ -6,15 +6,13 @@ import { languages } from "../assets/languages";
 const Main = () => {
   const [inputText, setInputText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
-  const [selectedLang, setSelectedLang] = useState("")
-
+  const [selectedLang, setSelectedLang] = useState("");
 
   const API_SERVER = process.env.REACT_APP_API_SERVER || 'http://localhost:5000';
 
-
   const handleInputChange = async (event) => {
     event.preventDefault();
-   
+
     const selectedLangElement = document.getElementById('selected-lang');
     const selectedLangValue = selectedLangElement.value;
 
@@ -23,8 +21,7 @@ const Main = () => {
       return;
     }
 
-
-    const response = await fetch(`${API_SERVER}/translate` || `http://localhost:5000/translate`, {
+    const response = await fetch(`${API_SERVER}/translate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -35,7 +32,6 @@ const Main = () => {
       })
     });
 
-
     const data = await response.json();
 
     if (data.error) {
@@ -43,11 +39,7 @@ const Main = () => {
     } else {
       setTranslatedText(data.translation);
     }
-
-
   };
-
-
 
   const handleInput = (event) => {
     setInputText(event.target.value);
