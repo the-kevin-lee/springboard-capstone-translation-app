@@ -18,11 +18,13 @@ load_dotenv(dotenv_path='.env')  # loading environment variables
 env = os.environ.get('FLASK_ENV', 'development')
 app = Flask(__name__)
 app.config.from_object(config[env])
+CORS(app, resources={r"/*": {"origins": "https://translation-app-frontend-jk98.onrender.com"}})
+
 
 # Initialize services
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-CORS(app)
+# CORS(app)
 
 # Initialize translator 
 auth_key = os.getenv("DEEPL_AUTH_KEY")
