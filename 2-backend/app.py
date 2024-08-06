@@ -81,7 +81,7 @@ def register():
         'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
-    return jsonify({'message': 'Your account has been created!'}), 201
+    return jsonify({'message': 'Your account has been created!', 'token': token}), 201
 
 @app.route("/login", methods=['POST'])
 def login():
