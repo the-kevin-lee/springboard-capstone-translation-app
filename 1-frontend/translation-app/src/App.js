@@ -1,9 +1,10 @@
 import React from "react";
+import Register from "./pages/Register";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import EditUserInfo from "./pages/EditUserInfo";
 import DeleteAccount from "./pages/DeleteAccount";
-import Register from "./pages/Register";
+
 import Dashboard from './pages/Dashboard';
 import Translations from "./pages/Translations";
 
