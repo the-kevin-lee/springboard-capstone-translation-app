@@ -18,19 +18,25 @@ load_dotenv(dotenv_path='.env')  # loading environment variables
 env = os.environ.get('FLASK_ENV', 'development')
 app = Flask(__name__)
 app.config.from_object(config[env])
-CORS(app, resources={r"/*": {"origins": "https://translation-app-frontend-jk98.onrender.com"}})
+# CORS(app, resources={r"/*": {"origins": "https://translation-app-frontend-jk98.onrender.com"}})
 
 
 # Initialize services
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-# CORS(app)
+db = SQLAlchemy()
+migrate = Migrate()
+CORS(app)
+
+db.init_app(app)
+migrate.init_app(app,db)
 
 # Initialize translator 
 auth_key = os.getenv("DEEPL_AUTH_KEY")
 translator = deepl.Translator(auth_key)
 
 from backendfiles.models import User, Translation
+
+with app.app_context():
+    db.create_all()
 
 # Test route for server 
 @app.route("/")
@@ -56,14 +62,16 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization'].split(" ")[1] # extracting token from bearer
         if not token:
             return jsonify({'message': 'Token is missing.'}), 401
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
             current_user = User.query.filter_by(id=data['user_id']).first()
-        except:
+        except jwt.ExpiredSignatureError:
+            return jsonify({'message':'Token has expired'}), 401
+        except jwt.InvalidTokenError:
             return jsonify({'message': 'Token is invalid'}), 401
         return f(current_user, *args, **kwargs)
     return decorated
@@ -80,7 +88,7 @@ def register():
     #new user token
     token = jwt.encode({
         'user_id': new_user.id,
-        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)
+        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
     return jsonify({'message': 'Your account has been created!', 'token': token}), 201
@@ -94,7 +102,7 @@ def login():
     
     token = jwt.encode({
         'user_id': user.id,
-        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)
+        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
     return jsonify({'token': token})
@@ -169,5 +177,7 @@ def serve(path):
         return send_from_directory('1-frontend/build', 'index.html')
 
 if __name__ == "__main__":
+    # db.init_app(app)
+    # migrate.init_app(app,db)
     print(app.url_map)
     app.run(debug=True)
