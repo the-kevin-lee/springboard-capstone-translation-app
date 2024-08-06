@@ -11,7 +11,7 @@ import datetime
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .app_config import config
+from app_config import config
 
 load_dotenv(dotenv_path='.env')  # loading environment variables
 
@@ -28,7 +28,7 @@ CORS(app)
 auth_key = os.getenv("DEEPL_AUTH_KEY")
 translator = deepl.Translator(auth_key)
 
-from .backendfiles.models import User, Translation
+from backendfiles.models import User, Translation
 
 # Test route for server 
 @app.route("/")
